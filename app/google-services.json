@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "479260146472",
+    "firebase_url": "https://driverapplication-bfaef.firebaseio.com",
+    "project_id": "driverapplication-bfaef",
+    "storage_bucket": "driverapplication-bfaef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479260146472:android:6715a049c67a8bc8e26e1d",
+        "android_client_info": {
+          "package_name": "com.example.driveapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479260146472-ejf1g0g5emm8iarr63335lgavelgs5tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIxdCqngDq-H8IG6FL-Yj_lAPrIyZaU9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479260146472-ejf1g0g5emm8iarr63335lgavelgs5tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

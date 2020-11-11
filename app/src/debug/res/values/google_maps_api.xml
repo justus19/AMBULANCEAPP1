@@ -1,0 +1,24 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=61:E1:3A:95:D2:27:0B:11:F5:F8:2F:7F:22:39:E7:53:25:B7:52:24%3Bcom.example.driveapp
+
+    You can also add your credentials to an existing key, using these values:
+
+    Package name:
+    com.example.driveapp
+
+    SHA-1 certificate fingerprint:
+    61:E1:3A:95:D2:27:0B:11:F5:F8:2F:7F:22:39:E7:53:25:B7:52:24
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC17biH5r44WIRZSybGGj0L0qAlJ46sCK4</string>
+</resources>
