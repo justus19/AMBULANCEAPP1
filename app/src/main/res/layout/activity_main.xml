@@ -14,11 +14,13 @@
         android:id="@+id/driver"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
+        android:textStyle="bold"
         android:padding="20dp"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Rescue"
+        android:textStyle="bold"
         android:id="@+id/rescue"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="15sp"
