@@ -31,9 +31,9 @@
         <activity
             android:name=".RescueMapsActivity"
             android:label="@string/title_activity_rescue_maps" />
-        <activity android:name=".RescueLoginActivity" />
+        <activity android:name=".RescueRegisterActivity" />
         <activity android:name=".DriverMapActivity" />
-        <activity android:name=".Driverlogin" />
+        <activity android:name=".DriverRegisterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

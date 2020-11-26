@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,24 +23,39 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.Objects;
 
-public class RescueLoginActivity extends AppCompatActivity {
+public class RescueRegisterActivity extends AppCompatActivity {
 
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn, alreadyHaveAnAccount;
 
     private FirebaseAuth mAuth;
     private ProgressDialog loader;
-    private  String currentUserOnlineID;
     private DatabaseReference userDatabaseRef;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_rescue_login);
+        setContentView(R.layout.activity_driverlogin);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user!=null){
+                    Intent intent = new Intent(RescueRegisterActivity.this, DriverMapActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+            }
+        };
 
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
         registerEmail = findViewById(R.id.registerEmail);
@@ -50,12 +64,13 @@ public class RescueLoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+
         loader = new ProgressDialog(this);
 
         alreadyHaveAnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RescueLoginActivity.this, LoginActivity.class);
+                Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
 
             }
@@ -90,19 +105,21 @@ public class RescueLoginActivity extends AppCompatActivity {
             loader.setCanceledOnTouchOutside(false);
             loader.show();
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RescueLoginActivity.this, new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RescueRegisterActivity.this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()){
                         String error = task.getException().toString();
-                        Toast.makeText(RescueLoginActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
                         loader.dismiss();
+
                     }else {
-                        currentUserOnlineID = mAuth.getCurrentUser().getUid();
-                        userDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(currentUserOnlineID);
+                        String user_id = mAuth.getCurrentUser().getUid();
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(user_id).child("name");
+
 
                         HashMap<String, Object> userInfo = new HashMap();
-                        userInfo.put("id",currentUserOnlineID);
+                        userInfo.put("id",user_id);
                         userInfo.put("email", email);
                         userInfo.put("type", "rescue");
 
@@ -110,10 +127,10 @@ public class RescueLoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task task) {
                                 if (task.isSuccessful()){
-                                    Toast.makeText(RescueLoginActivity.this, "Registration set successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
                                 }else {
                                     String error = task.getException().toString();
-                                    Toast.makeText(RescueLoginActivity.this, "please provide details: "+ error, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
                                 }
                                 finish();
                                 loader.dismiss();
@@ -121,7 +138,7 @@ public class RescueLoginActivity extends AppCompatActivity {
                         });
 
 
-                        Intent intent = new Intent(RescueLoginActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                         loader.dismiss();
@@ -132,8 +149,13 @@ public class RescueLoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(firebaseAuthListener);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
     }
 }

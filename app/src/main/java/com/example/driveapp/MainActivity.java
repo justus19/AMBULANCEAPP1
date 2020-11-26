@@ -14,13 +14,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        nDriver = (Button) findViewById(R.id.driver);
-        nRescue = (Button) findViewById(R.id.rescue);
+        nDriver = findViewById(R.id.driver);
+        nRescue = findViewById(R.id.rescue);
 
         nDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Driverlogin.class);
+                Intent intent = new Intent(MainActivity.this, DriverRegisterActivity.class);
                 startActivity(intent);
                 finish();
                 return;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         nRescue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RescueLoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, RescueRegisterActivity.class);
                 startActivity(intent);
                 finish();
                 return;

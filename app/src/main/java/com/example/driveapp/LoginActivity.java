@@ -51,22 +51,23 @@ public class LoginActivity extends AppCompatActivity {
         loader = new ProgressDialog(this);
 
 
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
-                if (user != null) {
+                if (user!= null){
                     String uid = user.getUid();
-                    userDatabaseRef = getInstance().getReference("users").child(uid);
+                    userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
                     userDatabaseRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String type = snapshot.child("users").child("type").getValue(String.class);
-                            if (type.equals("driver") || type.equals("rescue")) {
-                                Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
+                            String type = snapshot.child("type").getValue(String.class);
+                            if (type.equals("driver") || type.equals("rescue")){
+                                Intent intent = new Intent(LoginActivity.this,DriverMapActivity.class);
                                 startActivity(intent);
                                 finish();
-                            } else {
+                            }else{
                                 Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -81,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
-
 //
 
 
@@ -113,19 +113,19 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful()){
                         String currentUserId = mAuth.getCurrentUser().getUid();
-                        userDatabaseRef = getInstance().getReference("users").child(currentUserId);
+                        userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(currentUserId);
                         userDatabaseRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String type = snapshot.child("type").getValue(String.class);
-                                if (type.equals("driver")) {
+                                if (type.equals("driver")){
                                     Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
                                     startActivity(intent);
                                     finish();
                                     loader.dismiss();
-                                } else if (type.equals("rescue")) {
+                                }else if (type.equals("rescue")){
                                     Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
-                    } else {
+                    }else {
                         String error = task.getException().toString();
                         Toast.makeText(LoginActivity.this, "Login failed: \n" + error, Toast.LENGTH_SHORT).show();
                         loader.dismiss();
@@ -149,6 +149,9 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
     }
+
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -161,5 +164,3 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.removeAuthStateListener(authStateListener);
     }
 }
-
-
