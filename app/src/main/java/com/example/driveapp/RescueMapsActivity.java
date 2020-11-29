@@ -2,7 +2,11 @@ package com.example.driveapp;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +28,21 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        logout = findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent logout=new Intent(getBaseContext(), LoginActivity.class);
+                logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(logout);
+                Toast.makeText(getBaseContext(),"Loged out",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        Toast.makeText(getBaseContext(),"Rescue maps",Toast.LENGTH_LONG).show();
     }
 
     /**

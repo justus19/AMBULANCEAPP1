@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn, alreadyHaveAnAccount;
 
+
     private FirebaseAuth mAuth;
     private ProgressDialog loader;
     private DatabaseReference userDatabaseRef;
@@ -41,6 +43,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_driverlogin);
+
         mAuth = FirebaseAuth.getInstance();
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -69,6 +72,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
         alreadyHaveAnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
 
@@ -113,7 +117,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         loader.dismiss();
                     }else {
                         String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users").child("driver").child(user_id).child("name");
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
@@ -121,25 +125,36 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         userInfo.put("email", email);
                         userInfo.put("type", "driver");
 
-                        userDatabaseRef.updateChildren(userInfo).addOnCompleteListener(new OnCompleteListener() {
+                        userDatabaseRef
+                                .updateChildren(userInfo)
+                                .addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
+
                                 if (task.isSuccessful()){
                                     Toast.makeText(DriverRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+
+                                    loader.dismiss();
+                                    Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+
+
                                 }else {
+
+                                    loader.dismiss();
                                     String error = task.getException().toString();
                                     Toast.makeText(DriverRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
+
                                 }
-                                finish();
-                                loader.dismiss();
+
+
+
                             }
                         });
 
 
-                        Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        loader.dismiss();
+
                     }
                 }
             });

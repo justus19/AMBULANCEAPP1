@@ -25,12 +25,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
+
 import static com.google.firebase.database.FirebaseDatabase.*;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn;
-    //private TextView dontHaveAccount;
+    private TextView dontHaveAccount;
 
     private FirebaseAuth mAuth;
     private ProgressDialog loader;
@@ -43,12 +45,20 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
 
-        //dontHaveAccount = findViewById(R.id.dontHaveAccount);
+        dontHaveAccount = findViewById(R.id.noAccTV);
         registerEmail = findViewById(R.id.registerEmail);
         registerPassword = findViewById(R.id.registerPassword);
         RegisterBtn = findViewById(R.id.RegisterBtn);
         mAuth = FirebaseAuth.getInstance();
         loader = new ProgressDialog(this);
+
+        dontHaveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(),RescueRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -56,21 +66,33 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
+
                 if (user!= null){
                     String uid = user.getUid();
+
                     userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+
                     userDatabaseRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String type = snapshot.child("type").getValue(String.class);
-                            if (type.equals("driver") || type.equals("rescue")){
-                                Intent intent = new Intent(LoginActivity.this,DriverMapActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }else{
-                                Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
-                                startActivity(intent);
-                                finish();
+                            if (snapshot.exists()) {
+
+                                String type = snapshot.child("type").getValue(String.class);
+
+
+                                Toast.makeText(getBaseContext(), type, Toast.LENGTH_LONG).show();
+                                if (type.equals("driver")) {
+
+                                    Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
+                                    startActivity(intent);
+                                    finish();
+
+                                } else if (type.equals("rescue")) {
+
+                                    Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             }
                         }
 
@@ -98,13 +120,18 @@ public class LoginActivity extends AppCompatActivity {
         final String password = registerPassword.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
+
             registerEmail.setError("Email Required!");
             return;
+
         }
         if (TextUtils.isEmpty(password)) {
+
             registerPassword.setError("Password Required!");
             return;
+
         } else {
+
             loader.setMessage("Login in progress...");
             loader.setCanceledOnTouchOutside(false);
             loader.show();
@@ -113,24 +140,47 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
+
                     if (task.isSuccessful()){
                         String currentUserId = mAuth.getCurrentUser().getUid();
                         userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(currentUserId);
                         userDatabaseRef.addValueEventListener(new ValueEventListener() {
+
+                            String type;
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String type = snapshot.child("type").getValue(String.class);
-                                if (type.equals("driver")){
-                                    Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
-                                    startActivity(intent);
-                                    finish();
+
+                                Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
+                                if (snapshot.exists()) {
+
+                                    if (map.get("type") != null) {
+
+                                        type = map.get("type").toString();
+
+                                    }
+
+
+                                    if (type.equals("driver")){
+                                        Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                        loader.dismiss();
+
+                                    }else if (type.equals("rescue")){
+
+                                        Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                        loader.dismiss();
+
+                                    }
+
+                                }else{
+
                                     loader.dismiss();
-                                }else if (type.equals("rescue")){
-                                    Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                    loader.dismiss();
+                                    Toast.makeText(LoginActivity.this, "Account details not found", Toast.LENGTH_SHORT).show();
                                 }
+
                             }
 
                             @Override
@@ -140,9 +190,11 @@ public class LoginActivity extends AppCompatActivity {
                         });
 
                     }else {
+
                         String error = task.getException().toString();
                         Toast.makeText(LoginActivity.this, "Login failed: \n" + error, Toast.LENGTH_SHORT).show();
                         loader.dismiss();
+
                     }
 
                 }

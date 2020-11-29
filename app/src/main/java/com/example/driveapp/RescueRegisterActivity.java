@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +29,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn, alreadyHaveAnAccount;
-
+    TextView driverAccount;
     private FirebaseAuth mAuth;
     private ProgressDialog loader;
     private DatabaseReference userDatabaseRef;
@@ -40,22 +41,20 @@ public class RescueRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_driverlogin);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        setContentView(R.layout.activity_rescue_login);
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+
+        driverAccount = findViewById(R.id.drACC);
+
+        driverAccount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null){
-                    Intent intent = new Intent(RescueRegisterActivity.this, DriverMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getBaseContext(),DriverRegisterActivity.class);
+                startActivity(intent);
             }
-        };
+        });
+
 
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
         registerEmail = findViewById(R.id.registerEmail);
@@ -70,6 +69,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
         alreadyHaveAnAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
 
@@ -97,6 +97,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
             return;
         }
         if (TextUtils.isEmpty(password)){
+
             registerPassword.setError("Password Required!");
             return;
         }
@@ -105,9 +106,11 @@ public class RescueRegisterActivity extends AppCompatActivity {
             loader.setCanceledOnTouchOutside(false);
             loader.show();
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RescueRegisterActivity.this, new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(RescueRegisterActivity.this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
+
                     if (!task.isSuccessful()){
                         String error = task.getException().toString();
                         Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
@@ -115,7 +118,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
                     }else {
                         String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(user_id).child("name");
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child(user_id);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
@@ -123,39 +126,38 @@ public class RescueRegisterActivity extends AppCompatActivity {
                         userInfo.put("email", email);
                         userInfo.put("type", "rescue");
 
-                        userDatabaseRef.updateChildren(userInfo).addOnCompleteListener(new OnCompleteListener() {
+                        userDatabaseRef
+                                .updateChildren(userInfo)
+                                .addOnCompleteListener(new OnCompleteListener() {
                             @Override
                             public void onComplete(@NonNull Task task) {
+
+
                                 if (task.isSuccessful()){
                                     Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+
+                                    loader.dismiss();
+                                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+
                                 }else {
                                     String error = task.getException().toString();
+                                    loader.dismiss();
                                     Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
                                 }
                                 finish();
-                                loader.dismiss();
+
                             }
                         });
 
 
-                        Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        loader.dismiss();
+
                     }
                 }
             });
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-    }
+
 }
