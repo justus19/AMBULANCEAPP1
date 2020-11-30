@@ -118,7 +118,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
                     }else {
                         String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child(user_id);
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child("rescue").child(user_id);
 
 
                         HashMap<String, Object> userInfo = new HashMap();

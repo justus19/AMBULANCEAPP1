@@ -117,7 +117,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         loader.dismiss();
                     }else {
                         String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(user_id);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
