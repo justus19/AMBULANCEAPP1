@@ -11,7 +11,7 @@
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text=" Splash screen"
+    android:text=" WELCOME TO VEHICLE RESCUE HOME OF SURVIVORS"
     android:layout_centerInParent="true"
     android:textSize="30sp"/>
 

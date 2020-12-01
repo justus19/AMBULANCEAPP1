@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private Button nDriver, nRescue;
+    //private Button nDriver, nRescue;
     private FirebaseAuth.AuthStateListener fireBaseAuthListener;
     DatabaseReference userDatabaseRef;
     private FirebaseAuth mAuth;
@@ -37,14 +37,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-
-                    loggedIn = true;
-
-                }else {
-
-                    loggedIn = false;
-                }
+                loggedIn = user != null;
             }
         };
 

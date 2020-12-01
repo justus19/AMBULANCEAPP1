@@ -106,7 +106,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
         else {
             loader.setMessage("Registration in progress...");
             loader.setCanceledOnTouchOutside(false);
-            loader.show();
+            loader.dismiss();
 
             mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(DriverRegisterActivity.this, new OnCompleteListener<AuthResult>() {
                 @Override

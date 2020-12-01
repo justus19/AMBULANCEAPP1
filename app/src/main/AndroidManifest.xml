@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".DriverSettingActivity"></activity>
+        <activity android:name=".RescueSettingActivity" />
+        <activity android:name=".HistorySingleActivity" />
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".LoginActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -26,7 +30,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyC17biH5r44WIRZSybGGj0L0qAlJ46sCK4 " />
 
         <activity
             android:name=".RescueMapsActivity"
