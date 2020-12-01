@@ -46,18 +46,6 @@ public class DriverRegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null){
-                    Intent intent = new Intent(DriverRegisterActivity.this, DriverMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
-            }
-        };
 
         alreadyHaveAnAccount = findViewById(R.id.alreadyHaveAnAccount);
         registerEmail = findViewById(R.id.registerEmail);
@@ -117,7 +105,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         loader.dismiss();
                     }else {
                         String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
@@ -161,14 +149,4 @@ public class DriverRegisterActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-    }
 }

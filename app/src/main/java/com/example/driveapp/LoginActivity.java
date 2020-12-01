@@ -60,50 +60,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = mAuth.getCurrentUser();
-
-                if (user!= null){
-                    String uid = user.getUid();
-
-                    userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
-
-                    userDatabaseRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-
-                                String type = snapshot.child("type").getValue(String.class);
-
-
-                                Toast.makeText(getBaseContext(), type, Toast.LENGTH_LONG).show();
-                                if (type.equals("driver")) {
-
-                                    Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
-                                    startActivity(intent);
-                                    finish();
-
-                                } else if (type.equals("rescue")) {
-
-                                    Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
-        };
 //
 
 
@@ -203,16 +159,4 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(authStateListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(authStateListener);
-    }
 }
