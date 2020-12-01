@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="Dont have an account?"
+        android:text="Register a driver account?"
         android:layout_marginBottom="10dp"/>
 </LinearLayout>
