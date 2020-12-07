@@ -108,54 +108,54 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(RescueRegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (!task.isSuccessful()){
-                        String error = task.getException().toString();
-                        Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
-                        loader.dismiss();
+                            if (!task.isSuccessful()){
+                                String error = task.getException().toString();
+                                Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
+                                loader.dismiss();
 
-                    }else {
-                        String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child("rescue").child(user_id);
-
-
-                        HashMap<String, Object> userInfo = new HashMap();
-                        userInfo.put("id",user_id);
-                        userInfo.put("email", email);
-                        userInfo.put("type", "rescue");
-
-                        userDatabaseRef
-                                .updateChildren(userInfo)
-                                .addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
+                            }else {
+                                String user_id = mAuth.getCurrentUser().getUid();
+                                DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child("rescue").child(user_id);
 
 
-                                if (task.isSuccessful()){
-                                    Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+                                HashMap<String, Object> userInfo = new HashMap();
+                                userInfo.put("id",user_id);
+                                userInfo.put("email", email);
+                                userInfo.put("type", "rescue");
 
-                                    loader.dismiss();
-                                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                userDatabaseRef
+                                        .updateChildren(userInfo)
+                                        .addOnCompleteListener(new OnCompleteListener() {
+                                            @Override
+                                            public void onComplete(@NonNull Task task) {
 
-                                }else {
-                                    String error = task.getException().toString();
-                                    loader.dismiss();
-                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
-                                }
-                                finish();
+
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+
+                                                    loader.dismiss();
+                                                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+
+                                                }else {
+                                                    String error = task.getException().toString();
+                                                    loader.dismiss();
+                                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
+                                                }
+                                                finish();
+
+                                            }
+                                        });
+
+
 
                             }
-                        });
-
-
-
-                    }
-                }
-            });
+                        }
+                    });
         }
     }
 

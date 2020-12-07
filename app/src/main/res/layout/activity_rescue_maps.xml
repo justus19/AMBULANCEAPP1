@@ -50,7 +50,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/customerInfo"
+        android:id="@+id/driverInfo"
         android:layout_gravity="bottom"
         android:orientation="vertical"
         android:background="@android:color/white"
@@ -62,12 +62,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                android:id="@+id/driverProfileImage"
                 android:src="@mipmap/ic_launcher"
-                android:padding="24dp"/>
+                android:padding="20sp"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,19 +75,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/driDestination"
+                    android:id="@+id/driverDestination"
                     android:paddingBottom="10sp"
                     android:text="Destination: --"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/customerName"
+                    android:id="@+id/driverName"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/customerPhone"
+                    android:id="@+id/driverPhone"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
             </LinearLayout>
@@ -96,7 +95,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="picked customer"
+            android:text="picked driver"
             android:id="@+id/rideStatus"/>
 
 
