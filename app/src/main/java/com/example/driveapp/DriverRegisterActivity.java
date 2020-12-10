@@ -116,12 +116,12 @@ public class DriverRegisterActivity extends AppCompatActivity {
                         Toast.makeText(DriverRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
                         loader.dismiss();
                     }else {
-                        String user_id = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(user_id);
+                        String currentUserId = mAuth.getCurrentUser().getUid();
+                        userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(currentUserId);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
-                        userInfo.put("id",user_id);
+                        userInfo.put("id",currentUserId);
                         userInfo.put("email", email);
                         userInfo.put("type", "driver");
 

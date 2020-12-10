@@ -105,18 +105,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
 
         destinationLatLng = new LatLng(0.0, 0.0);
-        mrescueInfo = (LinearLayout) findViewById(R.id.rescueInfo);
-        mrescueProfileImage = (ImageView) findViewById(R.id.rescueProfileImage);
-        mrescueName = (TextView) findViewById(R.id.rescueName);
-        mrescuePhone = (TextView) findViewById(R.id.rescuePhone);
-        mrescueCar = (TextView) findViewById(R.id.rescueCar);
-        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        mrescueInfo = findViewById(R.id.rescueInfo);
+        mrescueProfileImage = findViewById(R.id.rescueProfileImage);
+        mrescueName = findViewById(R.id.rescueName);
+        mrescuePhone = findViewById(R.id.rescuePhone);
+        mrescueCar = findViewById(R.id.rescueCar);
+        mRatingBar = findViewById(R.id.ratingBar);
+        mRadioGroup = findViewById(R.id.radioGroup);
         mRadioGroup.check(R.id.Rosselot);
-        mLogout = (Button) findViewById(R.id.logout);
-        mRequest = (Button) findViewById(R.id.request);
-        mSettings = (Button) findViewById(R.id.settings);
-        mHistory = (Button) findViewById(R.id.history);
+        mLogout = findViewById(R.id.logout);
+        mRequest = findViewById(R.id.request);
+        mSettings = findViewById(R.id.settings);
+        mHistory = findViewById(R.id.history);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +137,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     endRide();
                 } else {
                     int selectId = mRadioGroup.getCheckedRadioButtonId();
-                    final RadioButton radioButton = (RadioButton) findViewById(selectId);
+                    final RadioButton radioButton = findViewById(selectId);
                     if (radioButton.getText() == null) {
                         return;
                     }
@@ -154,7 +154,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     });
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rescue)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rrescue)));
                     mRequest.setText("Getting your Rescue....");
                     getClosestrescue();
                 }
@@ -397,7 +397,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getrescueInfo() {
         mrescueInfo.setVisibility(View.VISIBLE);
-        DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(rescueFoundID);
+        DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child("driverRequest").child(rescueFoundID);
         mdriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -480,7 +480,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
-                            Toast.makeText(DriverMapActivity.this, "sucessfully removed " + userId, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DriverMapActivity.this, "successfully removed " + userId, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

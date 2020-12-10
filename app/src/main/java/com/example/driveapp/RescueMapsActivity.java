@@ -91,7 +91,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driver_map);
+        setContentView(R.layout.activity_rescue_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -101,12 +101,12 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        driverInfo = (LinearLayout) findViewById(R.id.driverInfo);
-        mdriverProfileImage = (ImageView) findViewById(R.id.driverProfileImage);
-        mdriverName = (TextView) findViewById(R.id.driverName);
-        mdriverPhone = (TextView) findViewById(R.id.driverPhone);
-        mdriverDestination = (TextView) findViewById(R.id.driverDestination);
-        mWorkingSwitch = (Switch) findViewById(R.id.workingSwitch);
+        driverInfo = findViewById(R.id.driverInfo);
+        mdriverProfileImage = findViewById(R.id.driverProfileImage);
+        mdriverName = findViewById(R.id.driverName);
+        mdriverPhone = findViewById(R.id.driverPhone);
+        mdriverDestination = findViewById(R.id.driverDestination);
+        mWorkingSwitch = findViewById(R.id.workingSwitch);
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -119,10 +119,10 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-        mSettings = (Button) findViewById(R.id.settings);
-        mLogout = (Button) findViewById(R.id.logout);
-        mRideStatus = (Button) findViewById(R.id.rideStatus);
-        mHistory = (Button) findViewById(R.id.history);
+        mSettings = findViewById(R.id.settings);
+        mLogout = findViewById(R.id.logout);
+        mRideStatus = findViewById(R.id.rideStatus);
+        mHistory = findViewById(R.id.history);
         mRideStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,7 +307,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
                     pickupLatLng = new LatLng(locationLat,locationLng);
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rescue)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rrescue)));
                     getRouteToMarker(pickupLatLng);
                 }
             }

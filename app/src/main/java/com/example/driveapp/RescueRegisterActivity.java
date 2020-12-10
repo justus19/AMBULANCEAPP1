@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -21,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -36,21 +36,34 @@ public class RescueRegisterActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_rescue_login);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_rescue_register);
+        mAuth = FirebaseAuth.getInstance();
 
 
         driverAccount = findViewById(R.id.drACC);
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+            }
+        };
 
         driverAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getBaseContext(),DriverRegisterActivity.class);
+                Intent intent = new Intent(getBaseContext(), DriverRegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -88,20 +101,18 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
     private void performRegistration() {
         final String email = registerEmail.getText().toString();
-        final  String password = registerPassword.getText().toString();
+        final String password = registerPassword.getText().toString();
 
 
-
-        if (TextUtils.isEmpty(email)){
+        if (TextUtils.isEmpty(email)) {
             registerEmail.setError("Email Required!");
             return;
         }
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
 
             registerPassword.setError("Password Required!");
             return;
-        }
-        else {
+        } else {
             loader.setMessage("Registration in progress...");
             loader.setCanceledOnTouchOutside(false);
             loader.show();
@@ -111,18 +122,18 @@ public class RescueRegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if (!task.isSuccessful()){
+                            if (!task.isSuccessful()) {
                                 String error = task.getException().toString();
                                 Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
                                 loader.dismiss();
 
-                            }else {
-                                String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference userDatabaseRef= FirebaseDatabase.getInstance().getReference("users").child("rescue").child(user_id);
+                            } else {
+                                String currentUserId = mAuth.getCurrentUser().getUid();
+                                userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child("rescue").child(currentUserId);
 
 
                                 HashMap<String, Object> userInfo = new HashMap();
-                                userInfo.put("id",user_id);
+                                userInfo.put("id", currentUserId);
                                 userInfo.put("email", email);
                                 userInfo.put("type", "rescue");
 
@@ -133,24 +144,24 @@ public class RescueRegisterActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task task) {
 
 
-                                                if (task.isSuccessful()){
+                                                if (task.isSuccessful()) {
                                                     Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+                                                    Log.e("Signup Error", "onCancelled", task.getException());
 
                                                     loader.dismiss();
-                                                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                                                    Intent intent = new Intent(RescueRegisterActivity.this, RescueMapsActivity.class);
                                                     startActivity(intent);
                                                     finish();
 
-                                                }else {
+                                                } else {
                                                     String error = task.getException().toString();
                                                     loader.dismiss();
-                                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: " + error, Toast.LENGTH_SHORT).show();
                                                 }
                                                 finish();
 
                                             }
                                         });
-
 
 
                             }
@@ -159,5 +170,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
         }
     }
 
-
 }
+
+
+ //

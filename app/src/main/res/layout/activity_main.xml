@@ -11,7 +11,8 @@
 <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text=" WELCOME TO VEHICLE RESCUE HOME OF SURVIVORS"
+    android:text="Stuck on the side of the road? Get help quickly - simply tap your phone! Click a
+    button on the drive app to get connected with a nearby towing company, available. Feel safe and secure your background-checked rescue will arrive shortly."
     android:layout_centerInParent="true"
     android:textSize="30sp"/>
 
