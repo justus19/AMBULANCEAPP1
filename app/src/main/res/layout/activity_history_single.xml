@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.NestedScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simcoder.uber.HistorySingleActivity"
+    tools:context=".HistorySingleActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,11 +19,7 @@
             android:layout_height="200dp"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:id="@+id/map"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20sp"
-            android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,23 +38,15 @@
                 android:text="date"
                 android:layout_marginBottom="20sp"
                 android:id="@+id/rideDate"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+
+
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:id="@+id/userImage"
-                android:src="@mipmap/ic_launcher"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20sp">
+                android:src="@mipmap/ic_default_user"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,8 +59,7 @@
                     android:text="phone"
                     android:layout_marginBottom="20sp"
                     android:id="@+id/userPhone"/>
-            </LinearLayout>
-        </LinearLayout>
+
         <RatingBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,4 +71,4 @@
 
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</RelativeLayout>

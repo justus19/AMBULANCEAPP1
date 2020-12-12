@@ -307,7 +307,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
                     pickupLatLng = new LatLng(locationLat,locationLng);
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rrescue)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_rescue)));
                     getRouteToMarker(pickupLatLng);
                 }
             }
@@ -584,15 +584,6 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                         mMap.setMyLocationEnabled(true);
 
-//                        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
-//                            if (location != null) {
-//                                wayLatitude = location.getLatitude();
-//                                wayLongitude = location.getLongitude();
-//                             //   txtLocation.setText(String.format(Locale.Kenya, "%s -- %s", wayLatitude, wayLongitude));
-//                                Toast.makeText(getApplicationContext(), String.format(Locale.Kenya, "%s -- %s", wayLatitude, wayLongitude, Toast.LENGTH_LONG).show();
-//
-//                            }
-//                        });
 
                     }
                 } else{

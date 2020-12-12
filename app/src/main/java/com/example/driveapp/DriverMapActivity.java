@@ -1,5 +1,6 @@
 package com.example.driveapp;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -69,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -154,8 +156,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     });
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_rrescue)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
                     mRequest.setText("Getting your Rescue....");
+                    mrescueProfileImage.setImageResource(R.mipmap.ic_default_user);
                     getClosestrescue();
                 }
             }
@@ -179,20 +182,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        //old code depressiated
-//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-//                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-//
-//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-//            @Override
-//            public void onPlaceSelected(Place place) {
-//                // TODO: Get info about the selected place.
-//                destination = place.getName().toString();
-//                destinationLatLng = place.getLatLng();
-//            }
-//            @Override
-//            public void onError(Status status) {
-//                // TODO: Handle the error.
+
+        // TODO: Handle the error.
 //            }
 //        });
 
@@ -262,6 +253,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             if (!rescueFound && requestBol) {
                                 DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(key);
                                 mdriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
@@ -269,8 +261,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                             if (rescueFound) {
                                                 return;
                                             }
-
-                                            if (rescueMap.get("service").equals(requestService)) {
+//                                            rescue<'servuce', 'ertyu'>
+                                            if(Objects.requireNonNull(rescueMap).get("service").equals(requestService)){
                                                 rescueFound = true;
                                                 rescueFoundID = dataSnapshot.getKey();
                                                 DatabaseReference rescueRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(rescueFoundID).child("driverRequest");
@@ -382,7 +374,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     }
 
 
-                    mrescueMarker = mMap.addMarker(new MarkerOptions().position(rescueLatLng).title("your rescue").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    mrescueMarker = mMap.addMarker(new MarkerOptions().position(rescueLatLng).title("your rescue").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
                 }
 
             }
@@ -397,7 +389,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getrescueInfo() {
         mrescueInfo.setVisibility(View.VISIBLE);
-        DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child("driverRequest").child(rescueFoundID);
+        DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(rescueFoundID);
         mdriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -503,7 +495,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mrescueName.setText("");
         mrescuePhone.setText("");
         mrescueCar.setText("Destination: --");
-        mrescueProfileImage.setImageResource(R.mipmap.ic_launcher);
+        mrescueProfileImage.setImageResource(R.mipmap.ic_default_user);
     }
 
     @Override
@@ -609,7 +601,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 LatLng rescueLocation = new LatLng(location.latitude, location.longitude);
 
-                Marker mrescueMarker = mMap.addMarker(new MarkerOptions().position(rescueLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                Marker mrescueMarker = mMap.addMarker(new MarkerOptions().position(rescueLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
                 mrescueMarker.setTag(key);
 
                 markers.add(mrescueMarker);

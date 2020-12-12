@@ -87,15 +87,15 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         mMapFragment.getMapAsync(this);
 
 
-        rideLocation = (TextView) findViewById(R.id.rideLocation);
-        rideDistance = (TextView) findViewById(R.id.rideDistance);
-        rideDate = (TextView) findViewById(R.id.rideDate);
-        userName = (TextView) findViewById(R.id.userName);
-        userPhone = (TextView) findViewById(R.id.userPhone);
+        rideLocation = findViewById(R.id.rideLocation);
+        rideDistance = findViewById(R.id.rideDistance);
+        rideDate = findViewById(R.id.rideDate);
+        userName = findViewById(R.id.userName);
+        userPhone = findViewById(R.id.userPhone);
 
-        userImage = (ImageView) findViewById(R.id.userImage);
+        userImage = findViewById(R.id.userImage);
 
-        mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
+        mRatingBar = findViewById(R.id.ratingBar);
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -246,7 +246,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
             mMap.animateCamera(cameraUpdate);
 
-            mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+            mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_default_user)));
             mMap.addMarker(new MarkerOptions().position(destinationLatLng).title("destination"));
 
             if(polylines.size()>0) {
