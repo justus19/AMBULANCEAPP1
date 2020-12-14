@@ -156,7 +156,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     });
 
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Rescue Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_rescue)));
                     mRequest.setText("Getting your Rescue....");
                     mrescueProfileImage.setImageResource(R.mipmap.ic_default_user);
                     getClosestrescue();

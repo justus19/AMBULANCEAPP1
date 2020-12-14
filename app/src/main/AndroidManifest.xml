@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DriverSettingActivity"></activity>
+        <activity android:name=".DriverSettingActivity" />
         <activity android:name=".RescueSettingActivity" />
         <activity android:name=".HistorySingleActivity" />
         <activity android:name=".HistoryActivity" />
