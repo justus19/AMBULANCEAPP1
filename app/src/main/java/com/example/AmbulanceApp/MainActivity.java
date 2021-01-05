@@ -1,12 +1,10 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    //private Button nDriver, nRescue;
+
     private FirebaseAuth.AuthStateListener fireBaseAuthListener;
     DatabaseReference userDatabaseRef;
     private FirebaseAuth mAuth;
@@ -73,20 +71,20 @@ public class MainActivity extends AppCompatActivity {
                                             }
 
 
-                                            if (accountType.equals("driver")) {
+                                            if (accountType.equals("patient")) {
 
-                                                Toast.makeText(getBaseContext(),"Welcome Driver",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getBaseContext(),"Welcome patient",Toast.LENGTH_SHORT).show();
 
-                                                Intent intent = new Intent(getBaseContext(), DriverMapActivity.class);
+                                                Intent intent = new Intent(getBaseContext(), PatientMapActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                                 return;
 
 
-                                            } else if (accountType.equals("rescue")) {
-                                                Toast.makeText(getBaseContext(),"Welcome Rescue",Toast.LENGTH_SHORT).show();
+                                            } else if (accountType.equals("driver")) {
+                                                Toast.makeText(getBaseContext(),"Welcome driver",Toast.LENGTH_SHORT).show();
 
-                                                Intent intent = new Intent(getBaseContext(), RescueMapsActivity.class);
+                                                Intent intent = new Intent(getBaseContext(), DriverMapsActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                                 return;
@@ -117,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }else {
 
-                        Intent goToLogin = new Intent(getBaseContext(), LoginActivity.class);
-                        startActivity(goToLogin);
+                        Intent goToDriverRegisterActivity = new Intent(getBaseContext(), DriverRegisterActivity.class);
+                        startActivity(goToDriverRegisterActivity);
                         finish();
                     }
 

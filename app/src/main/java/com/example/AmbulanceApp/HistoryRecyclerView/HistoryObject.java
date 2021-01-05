@@ -1,4 +1,4 @@
-package com.example.driveapp.HistoryRecyclerView;
+package com.example.AmbulanceApp.HistoryRecyclerView;
 
 public class HistoryObject {
     private String rideId;

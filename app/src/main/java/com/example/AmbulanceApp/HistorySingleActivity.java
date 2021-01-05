@@ -1,12 +1,9 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -20,7 +17,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
-import com.example.driveapp.R;
+import com.example.AmbulanceApp.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,10 +41,6 @@ import com.google.firebase.database.ValueEventListener;
 //import com.paypal.android.sdk.payments.PaymentActivity;
 //import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -55,7 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
-    private String rideId, currentUserId, rescueId, driverId, userrescueOrdriver;
+    private String rideId, currentUserId, driverId,patientId , userpatientOrdriver;
 
     private TextView rideLocation;
     private TextView rideDistance;
@@ -111,19 +104,19 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     for (DataSnapshot child:dataSnapshot.getChildren()){
+                        if (child.getKey().equals("patient")){
+                            patientId = child.getValue().toString();
+                            if(!patientId .equals(currentUserId)){
+                                userpatientOrdriver = "driver";
+                                getUserInformation("patient", patientId );
+                            }
+                        }
                         if (child.getKey().equals("driver")){
                             driverId = child.getValue().toString();
                             if(!driverId.equals(currentUserId)){
-                                userrescueOrdriver = "rescue";
-                                getUserInformation("driver", driverId);
-                            }
-                        }
-                        if (child.getKey().equals("rescue")){
-                            rescueId = child.getValue().toString();
-                            if(!rescueId.equals(currentUserId)){
-                                userrescueOrdriver = "rescue";
-                                getUserInformation("rescue", rescueId);
-                                displaydriverRelatedObjects();
+                                userpatientOrdriver = "patient";
+                                getUserInformation("patient", patientId);
+                                displaypatientRelatedObjects();
                             }
                         }
                         if (child.getKey().equals("timestamp")){
@@ -158,21 +151,21 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         });
     }
 
-    private void displaydriverRelatedObjects() {
+    private void displaypatientRelatedObjects() {
         mRatingBar.setVisibility(View.VISIBLE);
         mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 historyRideInfoDb.child("rating").setValue(rating);
-                DatabaseReference mrescueRatingDb = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(rescueId).child("rating");
-                mrescueRatingDb.child(rideId).setValue(rating);
+                DatabaseReference mdriverRatingDb = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(patientId).child("rating");
+                mdriverRatingDb.child(rideId).setValue(rating);
             }
         });
     }
 
 
-        private void getUserInformation(String otherUserrescueOrdriver, String otherUserId) {
-            DatabaseReference mOtherUserDB = FirebaseDatabase.getInstance().getReference().child("users").child(otherUserrescueOrdriver).child(otherUserId);
+        private void getUserInformation(String otherUserpatientOrdriver, String otherUserId) {
+            DatabaseReference mOtherUserDB = FirebaseDatabase.getInstance().getReference().child("users").child(otherUserpatientOrdriver).child(otherUserId);
             mOtherUserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

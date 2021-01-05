@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RescueMapsActivity" >
+    tools:context=".DriverMapsActivity" >
 
     <fragment
         android:id="@+id/map"
@@ -50,7 +50,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/driverInfo"
+        android:id="@+id/patientInfo"
         android:layout_gravity="bottom"
         android:orientation="vertical"
         android:background="@android:color/white"
@@ -64,7 +64,7 @@
             <ImageView
                 android:layout_width="100sp"
                 android:layout_height="100sp"
-                android:id="@+id/driverProfileImage"
+                android:id="@+id/patientProfileImage"
                 android:src="@mipmap/ic_default_user"
                 android:padding="20sp"/>
             <LinearLayout
@@ -75,19 +75,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/driverDestination"
+                    android:id="@+id/patientDestination"
                     android:paddingBottom="10sp"
                     android:text="Destination: --"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/driverName"
+                    android:id="@+id/patientName"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/driverPhone"
+                    android:id="@+id/patientPhone"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
             </LinearLayout>
@@ -95,10 +95,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="picked driver"
+            android:text="picked patient"
             android:id="@+id/rideStatus"/>
 
 
     </LinearLayout>
 </FrameLayout>
-

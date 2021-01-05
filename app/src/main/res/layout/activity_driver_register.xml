@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RescueRegisterActivity"
+    tools:context=".DriverRegisterActivity"
     android:orientation="vertical">
     <EditText
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="register as Rescue"
+        android:text="register as Driver"
         android:textStyle="bold"
         android:id="@+id/RegisterBtn"/>
 
@@ -41,6 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="Register a driver account?"
+        android:text="Register a patient account?"
         android:layout_marginBottom="10dp"/>
 </LinearLayout>

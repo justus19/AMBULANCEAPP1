@@ -4,6 +4,7 @@
       <w>assigneddriver</w>
       <w>closestrescue</w>
       <w>connectrescue</w>
+      <w>getdriver</w>
       <w>getrescue</w>
       <w>mdriver</w>
       <w>ordriver</w>

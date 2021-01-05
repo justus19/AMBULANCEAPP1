@@ -1,31 +1,21 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.driveapp.HistoryRecyclerView.HistoryAdapter;
-import com.example.driveapp.HistoryRecyclerView.HistoryObject;
-import com.example.driveapp.HistoryRecyclerView.HistoryObject;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.AmbulanceApp.HistoryRecyclerView.HistoryAdapter;
+import com.example.AmbulanceApp.HistoryRecyclerView.HistoryObject;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -33,7 +23,7 @@ import java.util.Locale;
 
 
 public class HistoryActivity extends AppCompatActivity {
-    private String rescueOrdriver, userId;
+    private String patientOrdriver, userId;
 
     private RecyclerView mHistoryRecyclerView;
     private RecyclerView.Adapter mHistoryAdapter;
@@ -55,7 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
         mHistoryRecyclerView.setAdapter(mHistoryAdapter);
 
 
-        rescueOrdriver = getIntent().getExtras().getString("rescueOrdriver");
+        patientOrdriver = getIntent().getExtras().getString("patientOrdriver");
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         getUserHistoryIds();
     }
@@ -63,7 +53,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         private void getUserHistoryIds() {
-            DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(rescueOrdriver).child(userId).child("History");
+            DatabaseReference userHistoryDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(patientOrdriver).child(userId).child("History");
             userHistoryDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

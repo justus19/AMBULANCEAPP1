@@ -1,4 +1,4 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import org.junit.Test;
 

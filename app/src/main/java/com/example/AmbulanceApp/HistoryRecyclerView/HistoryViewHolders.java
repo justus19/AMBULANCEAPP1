@@ -1,11 +1,11 @@
-package com.example.driveapp.HistoryRecyclerView;
+package com.example.AmbulanceApp.HistoryRecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.driveapp.R;
+import com.example.AmbulanceApp.R;
 
 
 /**
@@ -26,7 +26,7 @@ public class HistoryViewHolders extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(v.getContext(), com.example.driveapp.HistoryActivity.class);
+        Intent intent = new Intent(v.getContext(), com.example.AmbulanceApp.HistoryActivity.class);
         Bundle b = new Bundle();
         b.putString("rideId", rideId.getText().toString());
         intent.putExtras(b);

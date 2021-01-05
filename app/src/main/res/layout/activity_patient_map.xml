@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DriverMapActivity" >
+    tools:context=".PatientMapActivity" >
+
 
 
     <fragment
@@ -63,7 +64,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rescueInfo"
+            android:id="@+id/driverInfo"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
             android:background="@android:color/white"
@@ -71,7 +72,7 @@
             <ImageView
                 android:layout_width="100sp"
                 android:layout_height="100sp"
-                android:id="@+id/rescueProfileImage"
+                android:id="@+id/driverProfileImage"
                 android:src="@mipmap/ic_default_user"
                 android:padding="20sp"/>
             <LinearLayout
@@ -82,19 +83,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rescueName"
+                    android:id="@+id/driverName"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rescuePhone"
+                    android:id="@+id/driverPhone"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rescueCar"
+                    android:id="@+id/driverCar"
                     android:paddingBottom="10sp"
                     android:paddingTop="20sp"/>
                 <RatingBar
@@ -119,25 +120,25 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rosselot"
-                    android:id="@+id/Rosselot"/>
+                    android:text="Ambulance1"
+                    android:id="@+id/Ambulance1"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Central"
-                    android:id="@+id/Central"/>
+                    android:text="Ambulance2"
+                    android:id="@+id/ambulance2"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Breakdown"
-                    android:id="@+id/Breakdown"/>
+                    android:text="Ambulance3"
+                    android:id="@+id/ambulance3"/>
             </RadioGroup>
 
             <Button
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="call Rescue"
+                android:text="call driver"
                 android:id="@+id/request"/>
 
 

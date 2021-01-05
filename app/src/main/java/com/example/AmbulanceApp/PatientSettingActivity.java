@@ -1,5 +1,4 @@
-package com.example.driveapp;
-
+package com.example.AmbulanceApp;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,10 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,43 +26,47 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RescueSettingActivity extends AppCompatActivity {
+public class PatientSettingActivity extends AppCompatActivity {
 
-    private EditText mNameField, mPhoneField, mCarField;
+    private EditText mNameField, mPhoneField;
+
     private Button mBack, mConfirm;
+
     private ImageView mProfileImage;
+
     private FirebaseAuth mAuth;
-    private DatabaseReference mrescueDatabase;
+    private DatabaseReference mdriverDatabase;
+
     private String userID;
     private String mName;
     private String mPhone;
-    private String mCar;
-    private String mService;
     private String mProfileImageUrl;
+
     private Uri resultUri;
-    private RadioGroup mRadioGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rescue_setting);
-
+        setContentView(R.layout.activity_patient_setting);
 
         mNameField = (EditText) findViewById(R.id.name);
         mPhoneField = (EditText) findViewById(R.id.phone);
-        mCarField = (EditText) findViewById(R.id.car);
+
         mProfileImage = (ImageView) findViewById(R.id.profileImage);
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+
         mBack = (Button) findViewById(R.id.back);
         mConfirm = (Button) findViewById(R.id.confirm);
+
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        mrescueDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(userID);
+        mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userID);
 
         getUserInfo();
 
@@ -92,7 +95,7 @@ public class RescueSettingActivity extends AppCompatActivity {
         });
     }
     private void getUserInfo(){
-        mrescueDatabase.addValueEventListener(new ValueEventListener() {
+        mdriverDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
@@ -104,24 +107,6 @@ public class RescueSettingActivity extends AppCompatActivity {
                     if(map.get("phone")!=null){
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
-                    }
-                    if(map.get("car")!=null){
-                        mCar = map.get("car").toString();
-                        mCarField.setText(mCar);
-                    }
-                    if(map.get("service")!=null){
-                        mService = map.get("service").toString();
-                        switch (mService){
-                            case"Rosselot":
-                                mRadioGroup.check(R.id.Rosselot);
-                                break;
-                            case"Central":
-                                mRadioGroup.check(R.id.Central);
-                                break;
-                            case"Breakdown":
-                                mRadioGroup.check(R.id.Breakdown);
-                                break;
-                        }
                     }
                     if(map.get("profileImageUrl")!=null){
                         mProfileImageUrl = map.get("profileImageUrl").toString();
@@ -141,24 +126,11 @@ public class RescueSettingActivity extends AppCompatActivity {
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
-        mCar = mCarField.getText().toString();
-
-        int selectId = mRadioGroup.getCheckedRadioButtonId();
-
-        final RadioButton radioButton = (RadioButton) findViewById(selectId);
-
-        if (radioButton.getText() == null){
-            return;
-        }
-
-        mService = radioButton.getText().toString();
 
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
-        userInfo.put("car", mCar);
-        userInfo.put("service", mService);
-        mrescueDatabase.updateChildren(userInfo);
+        mdriverDatabase.updateChildren(userInfo);
 
         if(resultUri != null) {
 
@@ -189,7 +161,7 @@ public class RescueSettingActivity extends AppCompatActivity {
 
                     Map newImage = new HashMap();
                     newImage.put("profileImageUrl", downloadUrl.toString());
-                    mrescueDatabase.updateChildren(newImage);
+                    mdriverDatabase.updateChildren(newImage);
 
                     finish();
                     return;

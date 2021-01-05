@@ -1,4 +1,4 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
-
-import static com.google.firebase.database.FirebaseDatabase.*;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText registerEmail, registerPassword;
@@ -55,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         dontHaveAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(),RescueRegisterActivity.class);
+                Intent intent = new Intent(getBaseContext(), DriverRegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -116,15 +113,15 @@ public class LoginActivity extends AppCompatActivity {
                                     }
 
 
-                                    if (type.equals("driver")){
-                                        Intent intent = new Intent(LoginActivity.this, DriverMapActivity.class);
+                                    if (type.equals("patient")){
+                                        Intent intent = new Intent(LoginActivity.this, PatientMapActivity.class);
                                         startActivity(intent);
                                         finish();
                                         loader.dismiss();
 
-                                    }else if (type.equals("rescue")){
+                                    }else if (type.equals("driver")){
 
-                                        Intent intent = new Intent(LoginActivity.this, RescueMapsActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, DriverMapsActivity.class);
                                         startActivity(intent);
                                         finish();
                                         loader.dismiss();

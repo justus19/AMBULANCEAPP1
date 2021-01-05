@@ -1,4 +1,4 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import android.app.Service;
 import android.content.Intent;
@@ -21,7 +21,7 @@ public class onAppKilled extends Service {
         super.onTaskRemoved(rootIntent);
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("rescueAvailable");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriverAvailable");
         GeoFire geoFire = new GeoFire(ref);
         geoFire.removeLocation(userId);
     }

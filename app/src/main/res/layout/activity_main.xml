@@ -16,7 +16,7 @@
     android:textAllCaps="true"
     android:textAlignment="gravity"
     android:textColorHighlight="@color/colorAccent"
-    android:text="Stuck on the side of the road? Get help quickly - simply tap your phone! Click driveapp."
+    android:text="healthy life is part of good health."
     android:layout_centerInParent="true"
     android:textSize="30sp"/>
 

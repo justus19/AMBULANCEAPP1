@@ -1,4 +1,4 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-public class RescueRegisterActivity extends AppCompatActivity {
+public class DriverRegisterActivity extends AppCompatActivity {
 
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn, alreadyHaveAnAccount;
@@ -40,7 +40,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_rescue_register);
+        setContentView(R.layout.activity_driver_register);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -51,7 +51,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                     return;
@@ -63,7 +63,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getBaseContext(), DriverRegisterActivity.class);
+                Intent intent = new Intent(getBaseContext(), PatientRegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -83,7 +83,7 @@ public class RescueRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(RescueRegisterActivity.this, LoginActivity.class);
+                Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
 
             }
@@ -118,24 +118,24 @@ public class RescueRegisterActivity extends AppCompatActivity {
             loader.show();
 
             mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(RescueRegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(DriverRegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (!task.isSuccessful()) {
                                 String error = task.getException().toString();
-                                Toast.makeText(RescueRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(DriverRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
                                 loader.dismiss();
 
                             } else {
                                 String currentUserId = mAuth.getCurrentUser().getUid();
-                                userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child("rescue").child(currentUserId);
+                                userDatabaseRef = FirebaseDatabase.getInstance().getReference("users").child("driver").child(currentUserId);
 
 
                                 HashMap<String, Object> userInfo = new HashMap();
                                 userInfo.put("id", currentUserId);
                                 userInfo.put("email", email);
-                                userInfo.put("type", "rescue");
+                                userInfo.put("type", "driver");
 
                                 userDatabaseRef
                                         .updateChildren(userInfo)
@@ -145,18 +145,18 @@ public class RescueRegisterActivity extends AppCompatActivity {
 
 
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(RescueRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(DriverRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
                                                     Log.e("Signup Error", "onCancelled", task.getException());
 
                                                     loader.dismiss();
-                                                    Intent intent = new Intent(RescueRegisterActivity.this, RescueMapsActivity.class);
+                                                    Intent intent = new Intent(DriverRegisterActivity.this, DriverMapsActivity.class);
                                                     startActivity(intent);
                                                     finish();
 
                                                 } else {
                                                     String error = task.getException().toString();
                                                     loader.dismiss();
-                                                    Toast.makeText(RescueRegisterActivity.this, "Details upload Failed: " + error, Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(DriverRegisterActivity.this, "Details upload Failed: " + error, Toast.LENGTH_SHORT).show();
                                                 }
                                                 finish();
 

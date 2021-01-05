@@ -1,4 +1,4 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,11 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.annotations.Nullable;
 
 import java.util.HashMap;
 
-public class DriverRegisterActivity extends AppCompatActivity {
+public class PatientRegisterActivity extends AppCompatActivity {
 
     private EditText registerEmail, registerPassword;
     private Button RegisterBtn, alreadyHaveAnAccount;
@@ -42,7 +40,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_driverlogin);
+        setContentView(R.layout.activity_patientlogin);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -51,7 +49,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user!=null){
-                    Intent intent = new Intent(DriverRegisterActivity.this, DriverMapActivity.class);
+                    Intent intent = new Intent(PatientRegisterActivity.this, PatientMapActivity.class);
                     startActivity(intent);
                     finish();
                     return;
@@ -73,7 +71,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
+                Intent intent = new Intent(PatientRegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
 
             }
@@ -108,22 +106,22 @@ public class DriverRegisterActivity extends AppCompatActivity {
             loader.setCanceledOnTouchOutside(false);
             loader.dismiss();
 
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(DriverRegisterActivity.this, new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(PatientRegisterActivity.this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()){
                         String error = task.getException().toString();
-                        Toast.makeText(DriverRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PatientRegisterActivity.this, "Registration Failed: \n" + error, Toast.LENGTH_SHORT).show();
                         loader.dismiss();
                     }else {
                         String currentUserId = mAuth.getCurrentUser().getUid();
-                        userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(currentUserId);
+                        userDatabaseRef= FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(currentUserId);
 
 
                         HashMap<String, Object> userInfo = new HashMap();
                         userInfo.put("id",currentUserId);
                         userInfo.put("email", email);
-                        userInfo.put("type", "driver");
+                        userInfo.put("type", "patient");
 
                         userDatabaseRef
                                 .updateChildren(userInfo)
@@ -132,10 +130,10 @@ public class DriverRegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task task) {
 
                                 if (task.isSuccessful()){
-                                    Toast.makeText(DriverRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PatientRegisterActivity.this, "your have successfully registered", Toast.LENGTH_SHORT).show();
 
                                     loader.dismiss();
-                                    Intent intent = new Intent(DriverRegisterActivity.this, LoginActivity.class);
+                                    Intent intent = new Intent(PatientRegisterActivity.this, LoginActivity.class);
                                     startActivity(intent);
                                     finish();
 
@@ -144,7 +142,7 @@ public class DriverRegisterActivity extends AppCompatActivity {
 
                                     loader.dismiss();
                                     String error = task.getException().toString();
-                                    Toast.makeText(DriverRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PatientRegisterActivity.this, "Details upload Failed: "+ error, Toast.LENGTH_SHORT).show();
 
                                 }
 

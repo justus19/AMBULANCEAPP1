@@ -1,11 +1,9 @@
-package com.example.driveapp;
+package com.example.AmbulanceApp;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -33,8 +31,6 @@ import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -57,14 +53,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Driver;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
+public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
     private GoogleMap mMap;
     LocationRequest mLocationRequest;
     Location mLastLocation;
@@ -72,26 +67,26 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
     private Button mLogout, mSettings, mRideStatus, mHistory;
     private Switch mWorkingSwitch;
     private int status = 0;
-    private String driverId = "", destination;
+    private String patientId = "", destination;
     private LatLng destinationLatLng, pickupLatLng;
     private float rideDistance;
     private Boolean isLoggingOut = false;
     private SupportMapFragment mapFragment;
 
-    private LinearLayout driverInfo;
-    private ImageView mdriverProfileImage;
-    private TextView mdriverName, mdriverPhone, mdriverDestination;
+    private LinearLayout patientInfo;
+    private ImageView mpatientProfileImage;
+    private TextView mpatientName, mpatientPhone, mpatientDestination;
     private List<Polyline> polylines;
     Marker pickupMarker;
-    private DatabaseReference assigneddriverPickupLocationRef;
-    private ValueEventListener assigneddriverPickupLocationRefListener;
+    private DatabaseReference assignedpatientPickupLocationRef;
+    private ValueEventListener assignedpatientPickupLocationRefListener;
     private static final int[] COLORS = new int[]{R.color.primary_dark_material_light};
     private double wayLatitude = 0.0, wayLongitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rescue_maps);
+        setContentView(R.layout.activity_driver_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -101,20 +96,20 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        driverInfo = findViewById(R.id.driverInfo);
-        mdriverProfileImage = findViewById(R.id.driverProfileImage);
-        mdriverName = findViewById(R.id.driverName);
-        mdriverPhone = findViewById(R.id.driverPhone);
-        mdriverDestination = findViewById(R.id.driverDestination);
+        patientInfo = findViewById(R.id.patientInfo);
+        mpatientProfileImage = findViewById(R.id.patientProfileImage);
+        mpatientName = findViewById(R.id.patientName);
+        mpatientPhone = findViewById(R.id.patientPhone);
+        mpatientDestination = findViewById(R.id.patientDestination);
         mWorkingSwitch = findViewById(R.id.workingSwitch);
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked){
-                    connectrescue();
+                    connectdriver();
                 }else{
-                    disconnectrescue();
+                    disconnectdriver();
                 }
             }
         });
@@ -148,9 +143,9 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 isLoggingOut = true;
-                disconnectrescue();
+                disconnectdriver();
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(RescueMapsActivity.this, MainActivity.class);
+                Intent intent = new Intent(DriverMapsActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 return;
@@ -159,7 +154,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         mSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RescueMapsActivity.this, RescueSettingActivity.class);
+                Intent intent = new Intent(DriverMapsActivity.this, DriverSettingActivity.class);
                 startActivity(intent);
                 return;
             }
@@ -167,22 +162,22 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RescueMapsActivity.this, HistoryActivity.class);
-                intent.putExtra("rescueOrdriver", "rescue");
+                Intent intent = new Intent(DriverMapsActivity.this, HistoryActivity.class);
+                intent.putExtra("patientOrdriver", "driver");
                 startActivity(intent);
                 return;
             }
         });
-        getAssigneddriver();
+        getAssignedpatient();
     }
     LocationCallback  mLocationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            Toast.makeText(RescueMapsActivity.this, "inside mLocationCallback*********", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DriverMapsActivity.this, "inside mLocationCallback*********", Toast.LENGTH_SHORT).show();
             for(final Location location : locationResult.getLocations()){
                 if(getApplicationContext()!=null){
 
-                    if(!driverId.equals("") && mLastLocation!=null && location != null){
+                    if(!patientId.equals("") && mLastLocation!=null && location != null){
                         rideDistance += mLastLocation.distanceTo(location)/1000;
                     }
                     mLastLocation = location;
@@ -191,12 +186,12 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(21));
 
                     final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("rescueAvailable");
-                    final DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("rescueWorking");
+                    DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driverAvailable");
+                    final DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driverWorking");
                     final GeoFire geoFireAvailable = new GeoFire(refAvailable);
                     final GeoFire geoFireWorking = new GeoFire(refWorking);
 
-                    switch (driverId){
+                    switch (patientId){
                         case "":
                             refWorking.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -205,7 +200,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                                         geoFireWorking.removeLocation(userId, new GeoFire.CompletionListener() {
                                             @Override
                                             public void onComplete(String key, DatabaseError error) {
-                                                Toast.makeText(RescueMapsActivity.this, "sucessfully removed "+ userId, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(DriverMapsActivity.this, "sucessfully removed "+ userId, Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -218,7 +213,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                             geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                                 @Override
                                 public void onComplete(String key, DatabaseError error) {
-                                    Toast.makeText(RescueMapsActivity.this, "Completed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DriverMapsActivity.this, "Completed", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -231,7 +226,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                                         geoFireAvailable.removeLocation(userId, new GeoFire.CompletionListener() {
                                             @Override
                                             public void onComplete(String key, DatabaseError error) {
-                                                Toast.makeText(RescueMapsActivity.this, "sucessfully removed "+ userId, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(DriverMapsActivity.this, "sucessfully removed "+ userId, Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -244,7 +239,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                             geoFireWorking.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                                 @Override
                                 public void onComplete(String key, DatabaseError error) {
-                                    Toast.makeText(RescueMapsActivity.this, "Completed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DriverMapsActivity.this, "Completed", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             break;
@@ -253,19 +248,19 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         }
     };
-    private void getAssigneddriver(){
-        Toast.makeText(RescueMapsActivity.this, "inside getAssigneddriver", Toast.LENGTH_SHORT).show();
-        final String rescueId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assigneddriverRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(rescueId).child("driverRequest").child("driverRideId");
-        assigneddriverRef.addValueEventListener(new ValueEventListener() {
+    private void getAssignedpatient(){
+        Toast.makeText(DriverMapsActivity.this, "inside getAssignedpatient", Toast.LENGTH_SHORT).show();
+        final String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedpatientRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(driverId).child("patientRequest").child("patientRideId");
+        assignedpatientRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
                     status = 1;
-                    driverId = dataSnapshot.getValue().toString();
-                    getAssigneddriverPickupLocation();
-                    getAssigneddriverDestination();
-                    getAssigneddriverInfo();
+                    patientId = dataSnapshot.getValue().toString();
+                    getAssignedpatientPickupLocation();
+                    getAssignedpatientDestination();
+                    getAssignedpatientInfo();
                 }else{
                     endRide();
                 }
@@ -289,14 +284,14 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
     }
 
-    private void getAssigneddriverPickupLocation(){
-        Toast.makeText(RescueMapsActivity.this, "inside getAssigneddriverPickupLocation", Toast.LENGTH_SHORT).show();
+    private void getAssignedpatientPickupLocation(){
+        Toast.makeText(DriverMapsActivity.this, "inside getAssignedpatientPickupLocation", Toast.LENGTH_SHORT).show();
 
-        assigneddriverPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("driverRequest").child(driverId).child("l");
-        assigneddriverPickupLocationRefListener = assigneddriverPickupLocationRef.addValueEventListener(new ValueEventListener() {
+        assignedpatientPickupLocationRef = FirebaseDatabase.getInstance().getReference().child("patientRequest").child(patientId).child("l");
+        assignedpatientPickupLocationRefListener = assignedpatientPickupLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && !driverId.equals("")){
+                if(dataSnapshot.exists() && !patientId.equals("")){
                     List<Object> map = (List<Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
@@ -307,7 +302,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                         locationLng = Double.parseDouble(map.get(1).toString());
                     }
                     pickupLatLng = new LatLng(locationLat,locationLng);
-                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_rescue)));
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ambulance)));
                     getRouteToMarker(pickupLatLng);
                 }
             }
@@ -318,21 +313,21 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
-    private void getAssigneddriverDestination(){
-        Toast.makeText(RescueMapsActivity.this, "inside getAssignedDestination", Toast.LENGTH_SHORT).show();
-        String rescueId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference assigneddriverRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child("rescueId").child("driverRequest");
-        assigneddriverRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getAssignedpatientDestination(){
+        Toast.makeText(DriverMapsActivity.this, "inside getAssignedDestination", Toast.LENGTH_SHORT).show();
+        String driverId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference assignedpatientRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child("driverId").child("patientRequest");
+        assignedpatientRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if(map.get("destination")!=null){
                         destination = map.get("destination").toString();
-                        mdriverDestination.setText("Destination: " + destination);
+                        mpatientDestination.setText("Destination: " + destination);
                     }
                     else{
-                        mdriverDestination.setText("Destination: --");
+                        mpatientDestination.setText("Destination: --");
                     }
 
                     Double destinationLat = 0.0;
@@ -353,23 +348,23 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
-    private void getAssigneddriverInfo(){
-        Toast.makeText(RescueMapsActivity.this, "inside getAssigneddriverInfo", Toast.LENGTH_SHORT).show();
-        driverInfo.setVisibility(View.VISIBLE);
-        DatabaseReference mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(driverId);
-        mdriverDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getAssignedpatientInfo(){
+        Toast.makeText(DriverMapsActivity.this, "inside getAssignedpatientInfo", Toast.LENGTH_SHORT).show();
+        patientInfo.setVisibility(View.VISIBLE);
+        DatabaseReference mpatientDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(patientId);
+        mpatientDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if(map.get("name")!=null){
-                        mdriverName.setText(map.get("name").toString());
+                        mpatientName.setText(map.get("name").toString());
                     }
                     if(map.get("phone")!=null){
-                        mdriverPhone.setText(map.get("phone").toString());
+                        mpatientPhone.setText(map.get("phone").toString());
                     }
                     if(map.get("profileImageUrl")!=null){
-                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mdriverProfileImage);
+                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mpatientProfileImage);
                     }
                 }
             }
@@ -380,16 +375,16 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
     private void recordRide(){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference rescueRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(userId).child("history");
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(driverId).child("history");
+        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userId).child("history");
+        DatabaseReference patientRef = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(patientId).child("history");
         DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
         String requestId = historyRef.push().getKey();
-        rescueRef.child(requestId).setValue(true);
         driverRef.child(requestId).setValue(true);
+        patientRef.child(requestId).setValue(true);
 
         HashMap map = new HashMap();
-        map.put("rescue", userId);
-        map.put("driver", driverId);
+        map.put("driver", userId);
+        map.put("patient", patientId);
         map.put("rating", 0);
         map.put("timestamp", getCurrentTimestamp());
         map.put("destination", destination);
@@ -406,36 +401,36 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private void endRide(){
-        Toast.makeText(RescueMapsActivity.this, "inside endRide", Toast.LENGTH_SHORT).show();
-        mRideStatus.setText("picked driver");
+        Toast.makeText(DriverMapsActivity.this, "inside endRide", Toast.LENGTH_SHORT).show();
+        mRideStatus.setText("picked patient");
         erasePolylines();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference rescueRef = FirebaseDatabase.getInstance().getReference().child("users").child("rescue").child(userId).child("driverRequest");
+        final DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userId).child("patientRequest");
 
-        rescueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        driverRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.getChildrenCount()>0){
-                    rescueRef.removeValue();
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driverRequest");
+                    driverRef.removeValue();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("patientRequest");
                     GeoFire geoFire = new GeoFire(ref);
-                    geoFire.removeLocation(driverId);
-                    driverId="";
+                    geoFire.removeLocation(patientId);
+                    patientId="";
                     rideDistance = 0;
 
                     if(pickupMarker != null){
                         pickupMarker.remove();
                     }
-                    if (assigneddriverPickupLocationRefListener != null){
-                        assigneddriverPickupLocationRef.removeEventListener(assigneddriverPickupLocationRefListener);
+                    if (assignedpatientPickupLocationRefListener != null){
+                        assignedpatientPickupLocationRef.removeEventListener(assignedpatientPickupLocationRefListener);
                     }
-                    driverInfo.setVisibility(View.GONE);
-                    mdriverName.setText("");
-                    mdriverPhone.setText("");
-                    mdriverDestination.setText("Destination: --");
-                    mdriverProfileImage.setImageResource(R.mipmap.ic_launcher);
+                    patientInfo.setVisibility(View.GONE);
+                    mpatientName.setText("");
+                    mpatientPhone.setText("");
+                    mpatientDestination.setText("Destination: --");
+                    mpatientProfileImage.setImageResource(R.mipmap.ic_launcher);
                 }else{
-                    Toast.makeText(RescueMapsActivity.this, "No Request found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DriverMapsActivity.this, "No Request found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -446,20 +441,20 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
         });
     }
 
-    private void connectrescue(){
+    private void connectdriver(){
         checkLocationPermission();
-        Toast.makeText(RescueMapsActivity.this, "inside connectrescue", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DriverMapsActivity.this, "inside connectdriver", Toast.LENGTH_SHORT).show();
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper() );
         mMap.setMyLocationEnabled(true);
     }
-    private void disconnectrescue(){
+    private void disconnectdriver(){
         if(mFusedLocationClient != null){
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-            Toast.makeText(RescueMapsActivity.this, "inside disconnectrescue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DriverMapsActivity.this, "inside disconnectrescue", Toast.LENGTH_SHORT).show();
         }
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("rescueAvailable");
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriverAvailable");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -470,12 +465,12 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                     geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
-                            Toast.makeText(RescueMapsActivity.this, "suceessfully removed from available list "+ userId, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DriverMapsActivity.this, "suceessfully removed from available list "+ userId, Toast.LENGTH_SHORT).show();
                         }
                     });
 
                 }else{
-                    Toast.makeText(RescueMapsActivity.this, "rescue not found in the records", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DriverMapsActivity.this, "driver not found in the records", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -551,7 +546,7 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private void checkLocationPermission() {
-        Toast.makeText(RescueMapsActivity.this, "inside checkLocationPermission", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DriverMapsActivity.this, "inside checkLocationPermission", Toast.LENGTH_SHORT).show();
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(this)
@@ -560,20 +555,20 @@ public class RescueMapsActivity extends FragmentActivity implements OnMapReadyCa
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(RescueMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                                ActivityCompat.requestPermissions(DriverMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                             }
                         })
                         .create()
                         .show();
             } else{
-                ActivityCompat.requestPermissions(RescueMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(DriverMapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Toast.makeText(RescueMapsActivity.this, "inside onRequestPermissionsResult", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DriverMapsActivity.this, "inside onRequestPermissionsResult", Toast.LENGTH_SHORT).show();
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch(requestCode){

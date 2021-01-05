@@ -1,10 +1,10 @@
-package com.example.driveapp.HistoryRecyclerView;
+package com.example.AmbulanceApp.HistoryRecyclerView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.driveapp.R;
+import com.example.AmbulanceApp.R;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +17,10 @@ import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter< HistoryViewHolders> {
 
-    private List<com.example.driveapp.HistoryRecyclerView.HistoryObject> itemList;
+    private List<com.example.AmbulanceApp.HistoryRecyclerView.HistoryObject> itemList;
     private Context context;
 
-    public HistoryAdapter(ArrayList<com.example.driveapp.HistoryRecyclerView.HistoryObject> itemList, Context context) {
+    public HistoryAdapter(ArrayList<com.example.AmbulanceApp.HistoryRecyclerView.HistoryObject> itemList, Context context) {
         this.itemList = itemList;
         this.context = context;
     }
