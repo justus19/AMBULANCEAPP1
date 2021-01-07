@@ -377,6 +377,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userId).child("history");
         DatabaseReference patientRef = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(patientId).child("history");
+        DatabaseReference patientPayRef = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(patientId).child("latestRidePayment");
         DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
         String requestId = historyRef.push().getKey();
         driverRef.child(requestId).setValue(true);
@@ -394,6 +395,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         map.put("location/to/lng", destinationLatLng.longitude);
         map.put("distance", rideDistance);
         historyRef.child(requestId).updateChildren(map);
+
+
+        HashMap map1 = new HashMap();
+        map1.put("latestRideDBKEY", requestId);
+        patientPayRef.updateChildren(map1);
+
     }
     private Long getCurrentTimestamp() {
         Long timestamp = System.currentTimeMillis()/1000;

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PaymentsActivity">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        >
+
+        <Spinner
+            android:id="@+id/paymentSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:entries="@array/payments" />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_width="362dp"
+            android:layout_height="142dp"
+            android:text="Ksh _ _ _ _"
+            android:textSize="60sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:id="@+id/ridePriceTV"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mpesaPayLL"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay the amount to:"
+                android:textSize="18sp"
+                android:layout_gravity="start"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                />
+
+            <EditText
+                android:layout_width="279dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#000"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:hint="phone"
+                android:id="@+id/payNumberET"/>
+
+
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:id="@+id/pay2BT"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:text="Pay"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Ok"
+            android:id="@+id/cashpayBT"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate the cleaner"
+            android:textSize="28sp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="#FFF"
+            android:numStars="5"
+            android:stepSize="1"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</RelativeLayout>

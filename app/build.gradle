@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.github.jd-alexander:library:1.1.0'
     implementation 'com.google.android.libraries.places:places:2.4.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.bdhobare:mpesa:0.0.6'
+    implementation 'com.afollestad.material-dialogs:core:0.9.5.0'
     
 
 

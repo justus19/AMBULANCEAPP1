@@ -145,6 +145,33 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/payLL"
+        android:layout_width="336dp"
+        android:layout_height="171dp"
+        android:layout_gravity="center"
+        android:background="#FFFF"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your ride has ended continue to payments"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/pay2BT"
+            android:layout_marginTop="30dp"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:text="pay" />
+    </LinearLayout>
+
 
 
 </FrameLayout>

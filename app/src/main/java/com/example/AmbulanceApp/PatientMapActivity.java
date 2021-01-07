@@ -424,6 +424,7 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
     private ValueEventListener driverHasEndedRefListener;
 
     private void getHasRideEnded() {
+
         driverHasEndedRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(driverFoundID).child("patientRequest").child("patientRideId");
         driverHasEndedRefListener = driverHasEndedRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -431,7 +432,8 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
                 if (dataSnapshot.exists()) {
 
                 } else {
-                    endRide();
+                    
+                    ArrivedInHospital();
                 }
             }
 
@@ -440,6 +442,74 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
     }
+
+    private void ArrivedInHospital() {
+
+
+        requestBol = false;
+        geoQuery.removeAllListeners();
+        driverLocationRef.removeEventListener(driverLocationRefListener);
+        driverHasEndedRef.removeEventListener(driverHasEndedRefListener);
+
+
+        driverFound = false;
+        radius = 1;
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("patientRequest");
+        final GeoFire geoFire = new GeoFire(ref);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+                            Toast.makeText(PatientMapActivity.this, "successfully removed " + userId, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        if (pickupMarker != null) {
+            pickupMarker.remove();
+        }
+        if (mdriverMarker != null) {
+            mdriverMarker.remove();
+        }
+        mRequest.setText("Request  driver");
+        mdriverInfo.setVisibility(View.GONE);
+        mdriverName.setText("");
+        mdriverPhone.setText("");
+        mdriverCar.setText("Destination: --");
+        mdriverProfileImage.setImageResource(R.mipmap.ic_default_user);
+
+
+
+        if (driverFoundID != null) {
+            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(driverFoundID).child("patientRequest");
+            driverRef.removeValue();
+            driverFoundID = null;
+
+        }
+        payLL.setVisibility(View.VISIBLE);
+        payBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getBaseContext(),PaymentsActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    Button payBT = findViewById(R.id.pay2BT);
+    LinearLayout payLL = findViewById(R.id.payLL);
 
     private void endRide() {
         requestBol = false;

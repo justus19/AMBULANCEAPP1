@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">AMBULANCEAPP</string>
     <string name="title_activity_rescue_maps">Map</string>
+    <string-array name="payments">
+        <item>Cash</item>
+        <item>M-pesa</item>
+    </string-array>
 </resources>
