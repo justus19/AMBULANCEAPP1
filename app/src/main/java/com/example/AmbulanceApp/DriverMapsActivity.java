@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,6 +75,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private SupportMapFragment mapFragment;
 
     private LinearLayout patientInfo;
+    private FirebaseAuth mAuth;
     private ImageView mpatientProfileImage;
     private TextView mpatientName, mpatientPhone, mpatientDestination;
     private List<Polyline> polylines;
@@ -102,6 +104,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mpatientPhone = findViewById(R.id.patientPhone);
         mpatientDestination = findViewById(R.id.patientDestination);
         mWorkingSwitch = findViewById(R.id.workingSwitch);
+
+        //mAuth = FirebaseAuth.getInstance();
+
+       // FirebaseUser currentUser = mAuth.getCurrentUser();
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -457,11 +463,11 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private void disconnectdriver(){
         if(mFusedLocationClient != null){
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-            Toast.makeText(DriverMapsActivity.this, "inside disconnectrescue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DriverMapsActivity.this, "inside disconnectdriver", Toast.LENGTH_SHORT).show();
         }
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DriverAvailable");
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driverAvailable");
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

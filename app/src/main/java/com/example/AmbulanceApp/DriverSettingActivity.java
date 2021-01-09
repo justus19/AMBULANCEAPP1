@@ -54,13 +54,13 @@ public class DriverSettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver_setting);
 
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
-        mCarField = (EditText) findViewById(R.id.car);
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
-        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-        mBack = (Button) findViewById(R.id.back);
-        mConfirm = (Button) findViewById(R.id.confirm);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
+        mCarField = findViewById(R.id.car);
+        mProfileImage = findViewById(R.id.profileImage);
+        mRadioGroup = findViewById(R.id.radioGroup);
+        mBack = findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
         mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userID);
@@ -113,13 +113,13 @@ public class DriverSettingActivity extends AppCompatActivity {
                         mService = map.get("service").toString();
                         switch (mService){
                             case"Ambulance1":
-                                mRadioGroup.check(R.id.AMbulance1);
+                                mRadioGroup.check(R.id.Ambulance1);
                                 break;
                             case"Ambulance2":
                                 mRadioGroup.check(R.id.Ambulance2);
                                 break;
                             case"Ambulance3":
-                                mRadioGroup.check(R.id.AMbulance3);
+                                mRadioGroup.check(R.id.Ambulance3);
                                 break;
                         }
                     }
@@ -145,7 +145,7 @@ public class DriverSettingActivity extends AppCompatActivity {
 
         int selectId = mRadioGroup.getCheckedRadioButtonId();
 
-        final RadioButton radioButton = (RadioButton) findViewById(selectId);
+        final RadioButton radioButton = findViewById(selectId);
 
         if (radioButton.getText() == null){
             return;

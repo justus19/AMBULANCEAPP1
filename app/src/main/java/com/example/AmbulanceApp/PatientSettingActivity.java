@@ -41,7 +41,7 @@ public class PatientSettingActivity extends AppCompatActivity {
     private ImageView mProfileImage;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mdriverDatabase;
+    private DatabaseReference mpatientDatabase;
 
     private String userID;
     private String mName;
@@ -56,17 +56,17 @@ public class PatientSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_setting);
 
-        mNameField = (EditText) findViewById(R.id.name);
-        mPhoneField = (EditText) findViewById(R.id.phone);
+        mNameField = findViewById(R.id.name);
+        mPhoneField = findViewById(R.id.phone);
 
-        mProfileImage = (ImageView) findViewById(R.id.profileImage);
+        mProfileImage = findViewById(R.id.profileImage);
 
-        mBack = (Button) findViewById(R.id.back);
-        mConfirm = (Button) findViewById(R.id.confirm);
+        mBack = findViewById(R.id.back);
+        mConfirm = findViewById(R.id.confirm);
 
         mAuth = FirebaseAuth.getInstance();
         userID = mAuth.getCurrentUser().getUid();
-        mdriverDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("driver").child(userID);
+        mpatientDatabase = FirebaseDatabase.getInstance().getReference().child("users").child("patient").child(userID);
 
         getUserInfo();
 
@@ -95,7 +95,7 @@ public class PatientSettingActivity extends AppCompatActivity {
         });
     }
     private void getUserInfo(){
-        mdriverDatabase.addValueEventListener(new ValueEventListener() {
+        mpatientDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
@@ -130,7 +130,7 @@ public class PatientSettingActivity extends AppCompatActivity {
         Map userInfo = new HashMap();
         userInfo.put("name", mName);
         userInfo.put("phone", mPhone);
-        mdriverDatabase.updateChildren(userInfo);
+        mpatientDatabase.updateChildren(userInfo);
 
         if(resultUri != null) {
 
@@ -161,7 +161,7 @@ public class PatientSettingActivity extends AppCompatActivity {
 
                     Map newImage = new HashMap();
                     newImage.put("profileImageUrl", downloadUrl.toString());
-                    mdriverDatabase.updateChildren(newImage);
+                    mpatientDatabase.updateChildren(newImage);
 
                     finish();
                     return;

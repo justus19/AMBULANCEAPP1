@@ -72,6 +72,8 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
     LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
     private Button mLogout, mRequest, mSettings, mHistory;
+    private Button pay;
+    private LinearLayout payLL;
     private LatLng pickupLocation;
     private Boolean requestBol = false;
     private Marker pickupMarker;
@@ -112,6 +114,8 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
         mRequest = findViewById(R.id.request);
         mSettings = findViewById(R.id.settings);
         mHistory = findViewById(R.id.history);
+        pay = findViewById(R.id.pay2BT);
+        payLL = findViewById(R.id.payLL);
 
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +125,15 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
                 startActivity(intent);
                 finish();
                 return;
+            }
+        });
+        payLL.setVisibility(View.VISIBLE);
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getBaseContext(),PaymentsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -497,19 +510,9 @@ public class PatientMapActivity extends FragmentActivity implements OnMapReadyCa
             driverFoundID = null;
 
         }
-        payLL.setVisibility(View.VISIBLE);
-        payBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent = new Intent(getBaseContext(),PaymentsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
-    Button payBT = findViewById(R.id.pay2BT);
-    LinearLayout payLL = findViewById(R.id.payLL);
 
     private void endRide() {
         requestBol = false;
