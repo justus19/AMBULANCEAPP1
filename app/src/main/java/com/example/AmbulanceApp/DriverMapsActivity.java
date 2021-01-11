@@ -105,9 +105,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mpatientDestination = findViewById(R.id.patientDestination);
         mWorkingSwitch = findViewById(R.id.workingSwitch);
 
-        //mAuth = FirebaseAuth.getInstance();
-
-       // FirebaseUser currentUser = mAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
