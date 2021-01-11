@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }else{
 
                                     loader.dismiss();
-                                    Toast.makeText(LoginActivity.this, "Account details not found", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Account details successfull", Toast.LENGTH_SHORT).show();
                                 }
 
                             }
