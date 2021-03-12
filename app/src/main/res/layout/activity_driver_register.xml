@@ -5,33 +5,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@android:color/holo_red_light"
     tools:context=".DriverRegisterActivity"
     android:orientation="vertical">
-    <EditText
+
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="email"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
+
+
+    <EditText
         android:id="@+id/registerEmail"
-        android:inputType="textEmailAddress"/>
+        android:layout_width="330dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:hint="email"
+        android:drawableLeft="@drawable/ic_baseline_person_24"
+        android:inputType="textEmailAddress" />
+
+
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="password"
         android:id="@+id/registerPassword"
-        android:inputType="textPassword"/>
+        android:layout_width="330dp"
+        android:layout_height="50dp"
+        android:hint="password"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"
+        android:inputType="textPassword"
+        android:layout_marginTop="20dp"/>
+
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="register as Driver"
-        android:textStyle="bold"
-        android:id="@+id/RegisterBtn"/>
+        android:id="@+id/RegisterBtn"
+        android:layout_width="330dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="true"
+        android:text="Register as a Driver" />
 
     <Button
         android:id="@+id/alreadyHaveAnAccount"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
-        android:hint="alredyregisteredLogin"
+        android:hint="Login if registered"
         android:layout_gravity="center_horizontal"/>
 
     <TextView
