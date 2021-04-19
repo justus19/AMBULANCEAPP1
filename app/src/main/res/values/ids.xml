@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="phone" type="id"/>
+    <item name="name" type="id"/>
+    <item name="profileImage" type="id"/>
+    <item name="car" type="id"/>
+    <item name="back" type="id"/>
+    <item name="confirm" type="id"/>
+    <item name="Ambulance2" type="id"/>
+    <item name="Ambulance3" type="id" />
+</resources>
